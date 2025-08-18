@@ -1,0 +1,18 @@
+lsst.ConvertReferenceCatalogTask INFO: Creating 131072 file locks.
+lsst.ConvertReferenceCatalogTask INFO: File locks created.
+/opt/anaconda3/envs/lsst-scipipe-9.0.0/lib/python3.11/site-packages/astropy/units/function/logarithmic.py:73: RuntimeWarning: overflow encountered in power
+  return 10 ** self._function_unit.to(dex, x)
+lsst.ConvertReferenceCatalogTask INFO: Finished writing files. Elapsed time: 56.94 seconds
+Completed refcat conversion.
+
+Ingest the resulting files with the following commands, substituting the path
+to your butler repo for `REPO`, and the ticket number you are tracking this
+ingest on for `DM-NNNNN`:
+
+    butler register-dataset-type REPO panstarrs1_dr2 SimpleCatalog htm7
+    butler ingest-files -t direct REPO gaia_dr2 refcats/DM-NNNNN data/ps1-refcat/filename_to_htm.ecsv
+    butler collection-chain REPO --mode extend refcats refcats/DM-NNNNN
+/opt/anaconda3/envs/lsst-scipipe-9.0.0/lib/python3.11/multiprocessing/resource_tracker.py:254: UserWarning: resource_tracker: There appear to be 4 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
+/opt/anaconda3/envs/lsst-scipipe-9.0.0/lib/python3.11/multiprocessing/resource_tracker.py:267: UserWarning: resource_tracker: '/mp-zhskbdyj': [Errno 2] No such file or directory
+  warnings.warn('resource_tracker: %r: %s' % (name, e))

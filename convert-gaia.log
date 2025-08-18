@@ -1,0 +1,20 @@
+lsst.ConvertReferenceCatalogTask INFO: Creating 131072 file locks.
+lsst.ConvertReferenceCatalogTask INFO: File locks created.
+/opt/anaconda3/envs/lsst-scipipe-9.0.0/share/eups/Darwin/meas_algorithms/g6f94e2da02+91d9ed1ecf/python/lsst/meas/algorithms/convertRefcatManager.py:495: RuntimeWarning: invalid value encountered in divide
+  result['phot_g_mean_fluxErr'] = result['phot_g_mean_flux'] / input['phot_g_mean_flux_over_error']
+/opt/anaconda3/envs/lsst-scipipe-9.0.0/share/eups/Darwin/meas_algorithms/g6f94e2da02+91d9ed1ecf/python/lsst/meas/algorithms/convertRefcatManager.py:496: RuntimeWarning: invalid value encountered in divide
+  result['phot_bp_mean_fluxErr'] = result['phot_bp_mean_flux'] / input['phot_bp_mean_flux_over_error']
+/opt/anaconda3/envs/lsst-scipipe-9.0.0/share/eups/Darwin/meas_algorithms/g6f94e2da02+91d9ed1ecf/python/lsst/meas/algorithms/convertRefcatManager.py:497: RuntimeWarning: invalid value encountered in divide
+  result['phot_rp_mean_fluxErr'] = result['phot_rp_mean_flux'] / input['phot_rp_mean_flux_over_error']
+lsst.ConvertReferenceCatalogTask INFO: Finished writing files. Elapsed time: 15.15 seconds
+Completed refcat conversion.
+
+Ingest the resulting files with the following commands, substituting the path
+to your butler repo for `REPO`, and the ticket number you are tracking this
+ingest on for `DM-NNNNN`:
+
+    butler register-dataset-type REPO gaia_dr3 SimpleCatalog htm7
+    butler ingest-files -t direct REPO gaia_dr2 refcats/DM-NNNNN data/gaia-refcat/filename_to_htm.ecsv
+    butler collection-chain REPO --mode extend refcats refcats/DM-NNNNN
+/opt/anaconda3/envs/lsst-scipipe-9.0.0/lib/python3.11/multiprocessing/resource_tracker.py:254: UserWarning: resource_tracker: There appear to be 4 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '

@@ -1,0 +1,15 @@
+[project]
+name = "refcats"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "astropy>=7.1.0",
+    "astroquery>=0.4.10",
+    "dotenv>=0.9.9",
+    "ipykernel>=6.30.0",
+    "mastcasjobs>=0.0.7",
+    "numpy>=2.3.2",
+    "pandas>=2.3.1",
+]
