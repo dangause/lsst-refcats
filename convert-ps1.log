@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/opt/anaconda3/envs/lsst-scipipe-10.1.0/share/eups/Darwin/meas_algorithms/g1567b3d500+962554ed6b/bin/convertReferenceCatalog", line 7, in <module>
+    main()
+  File "/opt/anaconda3/envs/lsst-scipipe-10.1.0/share/eups/Darwin/meas_algorithms/g1567b3d500+962554ed6b/python/lsst/meas/algorithms/convertReferenceCatalog.py", line 704, in main
+    run_convert(args.outputDir, args.configFile, args.fileglob[0])
+  File "/opt/anaconda3/envs/lsst-scipipe-10.1.0/share/eups/Darwin/meas_algorithms/g1567b3d500+962554ed6b/python/lsst/meas/algorithms/convertReferenceCatalog.py", line 684, in run_convert
+    converter.run(files)
+  File "/opt/anaconda3/envs/lsst-scipipe-10.1.0/share/eups/Darwin/meas_algorithms/g1567b3d500+962554ed6b/python/lsst/meas/algorithms/convertReferenceCatalog.py", line 523, in run
+    pathlib.Path(self.output_dir).mkdir(exist_ok=False)
+  File "/opt/anaconda3/envs/lsst-scipipe-10.1.0/lib/python3.12/pathlib.py", line 1311, in mkdir
+    os.mkdir(self, mode)
+FileExistsError: [Errno 17] File exists: 'data/ps1-refcat/panstarrs1_dr2'

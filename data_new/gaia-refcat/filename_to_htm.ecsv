@@ -1,0 +1,18 @@
+# %ECSV 1.0
+# ---
+# datatype:
+# - {name: filename, datatype: string}
+# - {name: htm7, datatype: int64}
+# schema: astropy-2.0
+filename htm7
+data_new/gaia-refcat/gaia_dr3/236480.fits 236480
+data_new/gaia-refcat/gaia_dr3/219681.fits 219681
+data_new/gaia-refcat/gaia_dr3/235586.fits 235586
+data_new/gaia-refcat/gaia_dr3/215238.fits 215238
+data_new/gaia-refcat/gaia_dr3/227960.fits 227960
+data_new/gaia-refcat/gaia_dr3/235597.fits 235597
+data_new/gaia-refcat/gaia_dr3/215246.fits 215246
+data_new/gaia-refcat/gaia_dr3/219694.fits 219694
+data_new/gaia-refcat/gaia_dr3/167316.fits 167316
+data_new/gaia-refcat/gaia_dr3/227928.fits 227928
+data_new/gaia-refcat/gaia_dr3/221758.fits 221758
