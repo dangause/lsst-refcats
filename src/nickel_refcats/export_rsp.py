@@ -3,44 +3,38 @@ from __future__ import annotations
 
 import tarfile
 from pathlib import Path
-from typing import Iterable, Optional
+import inspect
 
-def _butler_export_copy(butler, outdir: Path, refs: Iterable, repo_uri: str | None = None, transfer: str = "copy"):
+def _butler_export_copy(butler, outdir: Path, refs, repo_uri: str | None = None, transfer: str = "copy"):
     """
-    Robustly call Butler.export with transfer support across Butler/RemoteButler variants.
-    Always use keyword args; try multiple param-name combos.
-
-    Attempts (in order):
-      1) repo_uri + (outdir|directory) + (refs|datasets|datasetRefs)
-      2)        -  (outdir|directory) + (refs|datasets|datasetRefs)
+    Call Butler.export with the *actual* keyword names this build expects by
+    inspecting the function signature. Works for RemoteButler & local Butler.
     """
-    out = str(outdir)
-    last_err: Exception | None = None
+    params = set(inspect.signature(butler.export).parameters.keys())
 
-    # helper
-    def _try(**kwargs):
-        return butler.export(**kwargs)
+    # figure out param names from what's available
+    kw = {"transfer": transfer}
+    if repo_uri is not None and "repo_uri" in params:
+        kw["repo_uri"] = repo_uri
 
-    # with repo_uri (newer RemoteButler often expects this)
-    if repo_uri is not None:
-        for outkey in ("outdir", "directory"):
-            for refkey in ("refs", "datasets", "datasetRefs"):
-                try:
-                    return _try(repo_uri=repo_uri, **{outkey: out, refkey: refs}, transfer=transfer)
-                except TypeError as e:
-                    last_err = e
+    if "outdir" in params:
+        kw["outdir"] = str(outdir)
+    elif "directory" in params:
+        kw["directory"] = str(outdir)
+    else:
+        raise TypeError("Butler.export() has no 'outdir' or 'directory' parameter in this build.")
 
-    # without repo_uri (older local Butler or older RemoteButler)
-    for outkey in ("outdir", "directory"):
-        for refkey in ("refs", "datasets", "datasetRefs"):
-            try:
-                return _try(**{outkey: out, refkey: refs}, transfer=transfer)
-            except TypeError as e:
-                last_err = e
+    if "refs" in params:
+        kw["refs"] = refs
+    elif "datasets" in params:
+        kw["datasets"] = refs
+    elif "datasetRefs" in params:
+        kw["datasetRefs"] = refs
+    else:
+        raise TypeError("Butler.export() has no 'refs'/'datasets'/'datasetRefs' parameter in this build.")
 
-    if last_err:
-        raise last_err
-    raise RuntimeError("Butler.export() failed: no compatible signature found.")
+    return butler.export(**kw)
+
 
 def _ensure_tar(src_dir: Path, tar_path: Path) -> Path:
     tar_path.parent.mkdir(parents=True, exist_ok=True)
