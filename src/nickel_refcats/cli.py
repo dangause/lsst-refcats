@@ -1,3 +1,4 @@
+# src/nickel_refcats/cli.py
 from __future__ import annotations
 import argparse, csv
 from pathlib import Path
@@ -57,17 +58,33 @@ def main_cones():
     print(f"Unique pointings: {len(cones)} | radius={args.radius_arcmin:.2f} arcmin")
     print(f"Wrote {outdir/'cones.csv'} and {outdir/'htm7_list.txt'} (n_htm7={len(htm7)})")
 
+
 def main_export():
-    ap = argparse.ArgumentParser(description="RSP: export Monster shards (htm7 IN …) and tar them")
-    ap.add_argument("--repo", default="/repo/main")
-    ap.add_argument("--collections", default="LSSTComCam/DP1")
-    ap.add_argument("--htm7-file", required=True)
+    ap = argparse.ArgumentParser(description="RSP: export Monster shards (htm7 IN …) and tar them (Python API)")
+    ap.add_argument("--repo", default="dp1", help="Use 'dp1' on the RSP; or a local file repo path.")
+    ap.add_argument("--collections", default=None, help="Collection with Monster; omit to auto-detect.")
+    ap.add_argument("--dataset-type", default="the_monster_20250219")
+    # HTM7 sources
+    ap.add_argument("--htm7-file", help="Path to a file with comma-separated HTM7 IDs")
+    ap.add_argument("--htm7", help="Comma-separated HTM7 IDs passed inline")
+    ap.add_argument("--stdin", action="store_true", help="Read HTM7 CSV from STDIN")
+    # Output
     ap.add_argument("--out", default="monster_export")
     ap.add_argument("--tar", default="monster_bundle.tgz")
     args = ap.parse_args()
-    htm7_csv = Path(args.htm7_file).read_text().strip()
-    tar_path = export_monster_htm7(args.repo, args.collections, htm7_csv, args.out, args.tar)
+
+    tar_path = export_monster_htm7(
+        repo=args.repo,
+        collections=args.collections,
+        htm7_csv=args.htm7,
+        htm7_file=args.htm7_file,
+        use_stdin=args.stdin,
+        dataset_type=args.dataset_type,
+        out_dir=args.out,
+        tar_path=args.tar,
+    )
     print(f"Exported bundle: {tar_path}")
+
 
 def main_import():
     ap = argparse.ArgumentParser(description="Local: import Monster bundle into Butler and optionally chain")
@@ -78,9 +95,9 @@ def main_import():
     run = import_bundle(args.repo_local, args.bundle, args.chain)
     print("Import complete." + (f" Chained RUN: {run}" if run else ""))
 
+
 def main():
-    # umbrella CLI with subcommands (optional)
-    import argparse
+    # optional umbrella with subcommands
     ap = argparse.ArgumentParser(prog="nickel-refcats")
     sub = ap.add_subparsers(dest="cmd", required=True)
     sub.add_parser("cones").set_defaults(func=main_cones)
