@@ -5,23 +5,23 @@ import inspect
 import os
 import tarfile
 from pathlib import Path
-from typing import Iterable, Optional
 
-def _butler_export_copy(butler, outdir: Path, refs: Iterable, repo_uri: Optional[str] = None):
+def _butler_export_copy(butler, outdir: Path, refs, repo_uri: str | None = None):
     """
     Call Butler.export with transfer='copy', handling both signature variants:
-      - export(repo_or_uri, outdir, refs, transfer=...)
-      - export(outdir, refs, transfer=...)
+
+    Newer: export(repo_or_uri, outdir, refs, transfer=...)
+    Older: export(outdir, refs, transfer=...)
     """
-    fn = butler.export
-    params = list(inspect.signature(fn).parameters)
-    if len(params) >= 4 and params[0].name not in ("outdir", "directory"):
-        # Newer signature: export(repo_or_uri, outdir, refs, transfer=...)
-        if not repo_uri:
-            raise TypeError("This Butler.export signature requires repo_uri (e.g. 'dp1').")
-        return fn(repo_uri, str(outdir), refs, transfer="copy")
-    # Older signature: export(outdir, refs, transfer=...)
-    return fn(str(outdir), refs, transfer="copy")
+    # Try the "new" 4-arg signature first if we were given a repo URI (e.g., "dp1")
+    if repo_uri is not None:
+        try:
+            return butler.export(repo_uri, str(outdir), refs, transfer="copy")
+        except TypeError:
+            pass  # fall through to the old signature
+
+    # Fall back to the "old" 3-arg signature
+    return butler.export(str(outdir), refs, transfer="copy")
 
 
 def _ensure_tar(src_dir: Path, tar_path: Path) -> Path:
