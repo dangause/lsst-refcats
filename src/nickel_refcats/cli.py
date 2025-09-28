@@ -59,8 +59,11 @@ def main_cones():
     print(f"Wrote {outdir/'cones.csv'} and {outdir/'htm7_list.txt'} (n_htm7={len(htm7)})")
 
 
+# src/nickel_refcats/cli.py (only the export subcommand shown)
 def main_export():
-    ap = argparse.ArgumentParser(description="RSP: export Monster shards (htm7 IN …) and tar them (Python API)")
+    ap = argparse.ArgumentParser(
+        description="RSP: export Monster shards (htm7 IN …) via Python Butler API and tar them"
+    )
     ap.add_argument("--repo", default="dp1", help="Use 'dp1' on the RSP; or a local file repo path.")
     ap.add_argument("--collections", default=None, help="Collection with Monster; omit to auto-detect.")
     ap.add_argument("--dataset-type", default="the_monster_20250219")
@@ -84,6 +87,7 @@ def main_export():
         tar_path=args.tar,
     )
     print(f"Exported bundle: {tar_path}")
+
 
 
 def main_import():
