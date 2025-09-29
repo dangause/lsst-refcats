@@ -66,32 +66,57 @@ def pointings_from_butler(repo: str, instrument: str = "Nickel",
 
 def _fits_paths(root: str | Path, recursive: bool) -> Iterable[Path]:
     root = Path(root)
-    exts = (".fits", ".fit", ".fz", ".fits.fz")
-    it = root.rglob("*") if recursive else root.glob("**/*")
+    exts = (".fits", ".fit", ".fz", ".fits.fz", ".fit.fz", ".fts", ".fts.fz")
+    if recursive:
+        it = root.rglob("*")
+    else:
+        it = root.glob("*")  # <-- fixed: non-recursive
     for p in sorted(it):
         low = str(p).lower()
         if p.is_file() and (p.suffix.lower() in exts or any(low.endswith(e) for e in exts)):
             yield p
 
-def pointings_from_fits_dir(fits_dir: str | Path, recursive: bool) -> Iterable[tuple[float, float]]:
+def pointings_from_fits_dir(
+    fits_dir: str | Path,
+    recursive: bool,
+    include_pattern: str | None = None,
+    exclude_pattern: str | None = None,
+) -> Iterable[tuple[float, float]]:
     from astropy.io import fits
     from astropy.wcs import WCS
+    rincl = re.compile(include_pattern) if include_pattern else None
+    rexcl = re.compile(exclude_pattern) if exclude_pattern else None
+
+    used = 0
     for p in _fits_paths(fits_dir, recursive):
+        s = str(p)
+        if rincl and not rincl.search(s):
+            continue
+        if rexcl and rexcl.search(s):
+            continue
         try:
             with fits.open(p, memmap=False) as hdul:
+                # pick the first HDU with data, else fall back to primary
                 hdr = next((h.header for h in hdul if getattr(h, "data", None) is not None), hdul[0].header)
                 try:
                     w = WCS(hdr)
                     nx = int(hdr.get("NAXIS1", 0))
                     ny = int(hdr.get("NAXIS2", 0))
                     if nx > 0 and ny > 0 and w.has_celestial:
-                        sky = w.pixel_to_world(nx/2.0, ny/2.0)
+                        # center pixel (0-based indexing)
+                        sky = w.pixel_to_world((nx - 1) / 2.0, (ny - 1) / 2.0)
+                        used += 1
                         yield float(sky.ra.deg), float(sky.dec.deg)
                         continue
                 except Exception:
                     pass
+                # fallback: CRVAL if present
                 if "CRVAL1" in hdr and "CRVAL2" in hdr:
+                    used += 1
                     yield float(hdr["CRVAL1"]), float(hdr["CRVAL2"])
                     continue
         except Exception:
             continue
+    # Optional: print a small summary (only when used directly)
+    if used == 0:
+        print(f"[fits-scan] No usable FITS found in {fits_dir} (recursive={recursive})")

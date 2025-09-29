@@ -62,3 +62,12 @@ python scripts/ps1_fetch_mast.py \
   --overwrite
 # (Optional) add --debug-fits to print a summary if any headers fail
 
+
+
+# And for the monster refcat:
+nickel-refcats cones \                                                      lsst-scipipe-10.1.0 09:08:03
+  --fits-dir "$HOME/Desktop/lick/data" \
+  --fits-recursive \
+  --radius-arcmin 6 \
+  --depth 7 \
+  --outdir ./data/monster_plan
