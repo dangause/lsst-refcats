@@ -24,7 +24,7 @@ Notes
     data/ps1-refcat-<REFDATE>/
 - The ingestion map files are:
     data/.../filename_to_htm.ecsv
-- This script *does not* register/ingest; that happens in run_full.sh
+- This script *does not* register/ingest
 """
 
 from __future__ import annotations
