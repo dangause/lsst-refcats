@@ -9,9 +9,14 @@ description = "Monster refcat cones → HTM7 → export (RSP) → import (local)
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-  "numpy",
-  "astropy",
-  "pandas",
+    "astropy>=7.1.0",
+    "astroquery>=0.4.10",
+    "dotenv>=0.9.9",
+    "ipykernel>=6.30.0",
+    "mastcasjobs>=0.0.7",
+    "numpy>=2.3.2",
+    "pandas>=2.3.1",
+    "pydantic>=2.11.7",
 ]
 # LSST libs are optional and imported lazily in functions that need them.
 
