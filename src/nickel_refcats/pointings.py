@@ -1,7 +1,8 @@
 from __future__ import annotations
-import math, re
+import math
+import re
 from pathlib import Path
-from typing import Iterable, Tuple, List
+from typing import Iterable
 import numpy as np
 
 def uniq_pairs(ras: np.ndarray, decs: np.ndarray, ndp: int = 6) -> tuple[np.ndarray, np.ndarray]:
@@ -12,9 +13,12 @@ def uniq_pairs(ras: np.ndarray, decs: np.ndarray, ndp: int = 6) -> tuple[np.ndar
 def _unitvec_to_xyz(u) -> tuple[float, float, float]:
     if hasattr(u, "getX"):  # lsst.sphgeom
         return float(u.getX()), float(u.getY()), float(u.getZ())
-    x = getattr(u, "x", None); x = x() if callable(x) else x
-    y = getattr(u, "y", None); y = y() if callable(y) else y
-    z = getattr(u, "z", None); z = z() if callable(z) else z
+    x = getattr(u, "x", None)
+    x = x() if callable(x) else x
+    y = getattr(u, "y", None)
+    y = y() if callable(y) else y
+    z = getattr(u, "z", None)
+    z = z() if callable(z) else z
     return float(x), float(y), float(z)
 
 def _region_centroid_radec(region) -> tuple[float, float]:
@@ -23,7 +27,8 @@ def _region_centroid_radec(region) -> tuple[float, float]:
         raise RuntimeError("region has no vertices")
     import numpy as np
     xyz = np.array([_unitvec_to_xyz(v) for v in verts], float)
-    m = xyz.mean(axis=0); m /= np.linalg.norm(m)
+    m = xyz.mean(axis=0)
+    m /= np.linalg.norm(m)
     x, y, z = m
     ra = (math.degrees(math.atan2(y, x)) + 360.0) % 360.0
     dec = math.degrees(math.asin(z))
@@ -77,13 +82,16 @@ def pointings_from_fits_dir(fits_dir: str | Path, recursive: bool) -> Iterable[t
                 hdr = next((h.header for h in hdul if getattr(h, "data", None) is not None), hdul[0].header)
                 try:
                     w = WCS(hdr)
-                    nx = int(hdr.get("NAXIS1", 0)); ny = int(hdr.get("NAXIS2", 0))
+                    nx = int(hdr.get("NAXIS1", 0))
+                    ny = int(hdr.get("NAXIS2", 0))
                     if nx > 0 and ny > 0 and w.has_celestial:
                         sky = w.pixel_to_world(nx/2.0, ny/2.0)
-                        yield float(sky.ra.deg), float(sky.dec.deg); continue
+                        yield float(sky.ra.deg), float(sky.dec.deg)
+                        continue
                 except Exception:
                     pass
                 if "CRVAL1" in hdr and "CRVAL2" in hdr:
-                    yield float(hdr["CRVAL1"]), float(hdr["CRVAL2"]); continue
+                    yield float(hdr["CRVAL1"]), float(hdr["CRVAL2"])
+                    continue
         except Exception:
             continue

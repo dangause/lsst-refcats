@@ -22,8 +22,6 @@ dependencies = [
 
 [project.scripts]
 nickel-cones = "nickel_refcats.cli:main_cones"
-nickel-monster-export = "nickel_refcats.cli:main_export"
-nickel-monster-import = "nickel_refcats.cli:main_import"
 nickel-refcats = "nickel_refcats.cli:main"  # umbrella with subcommands (optional)
 
 [tool.hatch.build.targets.wheel]
