@@ -1,5 +1,5 @@
 python scripts/gaia_fetch.py \
-  --butler /Users/dangause/Desktop/lick/lsst/data/nickel/repo \
+  --butler /Users/dangause/Developer/lick/lsst/data/nickel/repo \
   --instrument Nickel \
   --registry-where "visit.observation_reason='science'" \
   --radius-deg 0.09 \
@@ -11,7 +11,7 @@ python scripts/gaia_fetch.py \
 
 # gaia dr3 from butler repo
 python scripts/gaia_fetch.py \                                                         
-  --butler /Users/dangause/Desktop/lick/lsst/data/nickel/repo \
+  --butler /Users/dangause/Developer/lick/lsst/data/nickel/repo \
   --instrument Nickel \
   --registry-where "visit.observation_reason='science'" \
   --radius-deg 0.09 \
@@ -24,7 +24,7 @@ python scripts/gaia_fetch.py \
 
 # gaia dr3 from fits directory
 python scripts/gaia_fetch.py \
-  --fits-dir "/Users/dangause/Desktop/lick/data" \
+  --fits-dir "/Users/dangause/Developer/lick/data" \
   --fits-recursive \
   --radius-deg 0.09 \
   --batch-size 200 \
@@ -38,7 +38,7 @@ python scripts/gaia_fetch.py \
 
 
   python scripts/ps1_fetch_mast.py \                                                      
-  --butler /Users/dangause/Desktop/lick/lsst/data/nickel/repo \
+  --butler /Users/dangause/Developer/lick/lsst/data/nickel/repo \
   --instrument Nickel \
   --registry-where "visit.observation_reason='science'" \
   --radius-arcmin 5.4 \
@@ -51,7 +51,7 @@ python scripts/gaia_fetch.py \
 
 # ps1 from fits directory
 python scripts/ps1_fetch_mast.py \
-  --fits-dir "/Users/dangause/Desktop/lick/data" \
+  --fits-dir "/Users/dangause/Developer/lick/data" \
   --fits-recursive \
   --radius-arcmin 5.4 \
   --mag-band r --mag-min 12 --mag-max 20.5 \
@@ -66,7 +66,7 @@ python scripts/ps1_fetch_mast.py \
 
 # And for the monster refcat:
 nickel-refcats cones \                                                      lsst-scipipe-10.1.0 09:08:03
-  --fits-dir "$HOME/Desktop/lick/data" \
+  --fits-dir "$HOME/Developer/lick/data" \
   --fits-recursive \
   --radius-arcmin 6 \
   --depth 7 \
